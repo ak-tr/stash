@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <div class="name">
-      <span>akif.kr</span>
+      <span>stash<span class="opaque">.akif.kr</span></span>
     </div>
     <div class="logos">
       <svg
@@ -57,5 +57,16 @@ export default defineComponent({
 
 .logos svg:hover {
   transform: scale(1.25);
+  cursor: pointer;
+}
+
+.opaque {
+  opacity: 0.1;
+  transition: opacity 0.35s;
+}
+
+.opaque:hover {
+  opacity: 1;
+  cursor: pointer;
 }
 </style>
