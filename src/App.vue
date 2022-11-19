@@ -1,16 +1,19 @@
 <template>
   <div class="wrapper">
     <AppHeader />
+    <AppContainer />
   </div>
 </template>
 
 <script lang="ts">
 import AppHeader from './components/AppHeader.vue';
+import AppContainer from './components/AppContainer.vue';
 
 export default {
   name: "App",
   components: {
     AppHeader,
+    AppContainer,
   }
 }
 </script>
