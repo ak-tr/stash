@@ -20,7 +20,7 @@ export default {
     // Make theme changes to editor
     const theme = EditorView.theme({
       "&": {
-        height: `${editorHeight}px`,
+        height: `${editorHeight-15}px`,
       },
       "&.cm-focused": {
         outline: "none !important",
@@ -58,17 +58,13 @@ export default {
 
 <style>
 .editor {
-  margin: 20px;
-  width: 60%;
+  width: 100%;
+  flex-grow: 1;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   outline: 0 !important;
-}
-
-@media only screen and (max-width: 600px) {
-  .editor {
-    width: 100%;
-  }
+  font-size: 12px;
+  box-sizing: border-box;
 }
 </style>
