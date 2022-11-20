@@ -33,13 +33,10 @@ export default {
   -moz-appearance: none;
   appearance: none;
 
-  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
-    linear-gradient(135deg, gray 50%, transparent 50%),
-    linear-gradient(to right, #ccc, #ccc);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 16px) calc(1em + 2px), calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.7em;
-  background-repeat: no-repeat;
+	background-image: url("/down-arrow.svg");
+	background-position: 95% center;
+	background-repeat: no-repeat;
+
   box-sizing: border-box;
   transition: border 0.15s;
 }
