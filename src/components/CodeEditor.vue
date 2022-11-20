@@ -45,13 +45,29 @@ export default {
       parent: editor,
     });
 
-    // Focus view
-    view.focus();
-
     // Set cursor to position of end of placeholder text
     view.dispatch({
       selection: { anchor: defualtText.length }
     })
+
+    const options = {
+      attributes: true
+    }
+
+    // Listen for changes to cm-editor
+    const callback = (mutations: MutationRecord[]) => {
+      mutations.forEach((mutation) => {
+        const target = mutation.target as HTMLElement;
+
+        if (target.classList.contains("cm-focused")) {
+          return editor.style.outline = "1px solid white";
+        }
+        editor.style.outline = "1px solid rgba(255, 255, 255, 0.1)";
+      })
+    }
+
+    const observer = new MutationObserver(callback);
+    observer.observe(view.dom, options);
   }
 }
 </script>
@@ -63,8 +79,9 @@ export default {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
-  outline: 0 !important;
-  font-size: 12px;
   box-sizing: border-box;
+  font-size: 12px;
+  outline: 1px solid rgba(255, 255, 255, 0.1);
+  transition: outline 0.15s;
 }
 </style>
