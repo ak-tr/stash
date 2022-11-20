@@ -1,7 +1,8 @@
 <template>
   <div class="main">
     <div class="main-header">
-      <ContainerButton text="Upload / ⌘ + ⏎"/>
+      <ContainerDropdown />
+      <ContainerButton text="Upload"/>
     </div>
     <CodeEditor />
   </div>
@@ -10,12 +11,14 @@
 <script lang="ts">
 import CodeEditor from "./CodeEditor.vue";
 import ContainerButton from "./ContainerButton.vue";
+import ContainerDropdown from "./ContainerDropdown.vue";
 
 export default {
   name: "AppContainer",
   components: {
     CodeEditor,
-    ContainerButton
+    ContainerButton,
+    ContainerDropdown,
   }
 }
 </script>
@@ -27,7 +30,7 @@ export default {
   padding: 0 15%;
   height: 85vh;
   align-items: center;
-  margin: 20px;
+  margin: 10px 20px;
   box-sizing: border-box;
 }
 
@@ -38,7 +41,10 @@ export default {
 }
 
 .main-header {
-  padding: 10px;
-  align-self: flex-end;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  gap: 10px;
 }
 </style>
