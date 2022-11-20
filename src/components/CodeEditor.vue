@@ -21,6 +21,7 @@ export default {
     const theme = EditorView.theme({
       "&": {
         height: `${editorHeight-15}px`,
+        color: "rgba(255, 255, 255, 0.5)"
       },
       "&.cm-focused": {
         outline: "none !important",
@@ -73,15 +74,22 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.cdnfonts.com/css/sf-mono");
+
 .editor {
+  font-family: "SF Mono", sans-serif;
   width: 100%;
   flex-grow: 1;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   box-sizing: border-box;
-  font-size: 12px;
+  font-size: 13px;
   outline: 1px solid rgba(255, 255, 255, 0.1);
   transition: outline 0.15s;
+}
+
+.editor * {
+  font-family: inherit !important;
 }
 </style>

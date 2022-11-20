@@ -24,6 +24,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+
 .main {
   display: flex;
   flex-direction: column;
@@ -46,5 +48,9 @@ export default {
   width: 100%;
   padding: 10px 0 20px 0;
   gap: 10px;
+}
+
+.main-header * {
+  font-family: "Montserrat", sans-serif !important;
 }
 </style>
