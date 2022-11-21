@@ -1,5 +1,5 @@
 <template>
-  <button class="button" type="button">
+  <button class="button" type="button" ref="button">
     {{ text }} / {{getKeyMap()}}
   </button>
 </template>
@@ -8,6 +8,13 @@
 export default {
   name: "ContactButton",
   props: ["text"],
+  mounted() {
+    const button = this.$refs.button as HTMLButtonElement;
+
+    button.addEventListener("click", () => {
+      this.$emit("uploadClick");
+    })
+  },
   methods: {
     getOS() {
       if (navigator.userAgent.includes("Win")) return "Win";

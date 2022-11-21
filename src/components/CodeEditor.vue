@@ -4,18 +4,23 @@
 </template>
 
 <script lang="ts">
-import {EditorState} from "@codemirror/state"
-import {EditorView, keymap} from "@codemirror/view"
-import {defaultKeymap} from "@codemirror/commands"
+import { EditorState } from "@codemirror/state"
+import { EditorView, keymap } from "@codemirror/view"
+import { defaultKeymap } from "@codemirror/commands"
 
 export default {
   name: "CodeEditor",
+  data() {
+    return {
+      view: new EditorView()
+    }
+  },
   mounted() {
     // Get reference to editor and its height
     const editor = this.$refs.editor as HTMLElement;
     const editorHeight = editor.clientHeight;
     // Specify placeholder text
-    const defualtText = "Paste your code (or anything) here..."
+    const defaultText = "Paste your code (or anything) here..."
 
     // Make theme changes to editor
     const theme = EditorView.theme({
@@ -36,19 +41,19 @@ export default {
 
     // Set start state
     const startState = EditorState.create({
-      doc: defualtText,
+      doc: defaultText,
       extensions: [theme, keymap.of(defaultKeymap)]
     });
 
     // Create view and pass parent
-    const view = new EditorView({
+    this.view = new EditorView({
       state: startState,
       parent: editor,
     });
 
     // Set cursor to position of end of placeholder text
-    view.dispatch({
-      selection: { anchor: defualtText.length }
+    this.view.dispatch({
+      selection: { anchor: defaultText.length }
     })
 
     const options = {
@@ -63,12 +68,18 @@ export default {
         if (target.classList.contains("cm-focused")) {
           return editor.style.outline = "1px solid white";
         }
+
         editor.style.outline = "1px solid rgba(255, 255, 255, 0.1)";
       })
     }
 
     const observer = new MutationObserver(callback);
-    observer.observe(view.dom, options);
+    observer.observe(this.view.dom, options);
+  },
+  methods: {
+    getRawText() {
+      return this.view.state.doc.toJSON();
+    }
   }
 }
 </script>

@@ -2,9 +2,9 @@
   <div class="main">
     <div class="main-header">
       <ContainerDropdown />
-      <ContainerButton text="Upload"/>
+      <ContainerButton text="Upload" @upload-click="upload()" />
     </div>
-    <CodeEditor />
+    <CodeEditor ref="editor"/>
   </div>
 </template>
 
@@ -19,6 +19,19 @@ export default {
     CodeEditor,
     ContainerButton,
     ContainerDropdown,
+  },
+  mounted() {
+    window.addEventListener("keydown", (e: KeyboardEvent) => {
+      if (e.metaKey && e.key == "Enter") {
+        this.upload();
+      }
+    });
+  },
+  methods: {
+    upload() {
+      const editor: any = this.$refs.editor;
+      const raw = JSON.stringify(editor.getRawText());
+    }
   }
 }
 </script>
