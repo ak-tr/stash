@@ -1,15 +1,15 @@
 import { Env } from ".";
-import { PasteBody } from "./types";
+import { PasteBody, PasteParams, ValueInKV } from "./types";
 
 const headers = {
   "Content-Type": "application/json;charset=UTF-8",
 } as const;
 
 const ttlEpoch = {
-  1: 864000,
-  2: 7200,
-  3: 43200,
-  4: 86400,
+  0: 864000,
+  1: 7200,
+  2: 43200,
+  3: 86400,
 };
 
 export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
@@ -32,14 +32,37 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   // Generate new ID
   const uid = Date.now().toString(36);
   // Calculate expiration
-  const expiration = Date.now() + ttlEpoch[ttl as keyof typeof ttlEpoch];
+  const expirationTtl = ttlEpoch[ttl as keyof typeof ttlEpoch]; // laq42aco
 
   // Add to KV
-  await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), { expiration });
-
+  await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), { expirationTtl });
 
   return new Response(JSON.stringify({ id: uid }, null, 4), { headers });
 };
+
+export const getPaste = async ({ id }: PasteParams, env: Env) => {
+  const value = await env.STASH_KV.get(id);
+
+  if (!value) {
+    return new Response(
+      JSON.stringify({
+        message: "Key not found",
+      }),
+      {
+        headers,
+        status: 400,
+      }
+    );
+  }
+
+  const object: ValueInKV = JSON.parse(value);
+
+  if (object.once) {
+    await env.STASH_KV.delete(id);
+  }
+
+  return new Response(JSON.stringify({ raw: object.raw }, null, 4), { headers });
+}
 
 export const errorHandler = (error: any) => {
   return new Response(error.message || "Server Error", {
