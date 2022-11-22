@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="main-header">
-      <ContainerDropdown />
+      <ContainerDropdown ref="dropdown"/>
       <ContainerButton text="Upload" @upload-click="upload()" />
     </div>
     <CodeEditor ref="editor"/>
@@ -30,7 +30,20 @@ export default {
   methods: {
     upload() {
       const editor: any = this.$refs.editor;
+      const dropdown: any = this.$refs.dropdown;
+
       const raw = JSON.stringify(editor.getRawText());
+      const ttl = dropdown.getSelectedTTL();
+
+      const payload = {
+        ttl: +ttl,
+        raw: raw,
+        once: +ttl === 0 ? true : false,
+      }
+
+      this.$axios.post("https://stash.akif.kr/paste", payload).then(
+        (response) => console.log(response.data)
+      );
     }
   }
 }
