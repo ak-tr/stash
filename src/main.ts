@@ -7,3 +7,8 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios;
 app.mount("#app");
 
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $axios: typeof axios
+  }
+}
