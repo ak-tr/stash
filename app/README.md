@@ -1,3 +1,0 @@
-# Stash
-
-Work in progress...
