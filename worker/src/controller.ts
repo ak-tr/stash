@@ -10,7 +10,7 @@ const ttlEpoch = {
   1: 7200,
   2: 43200,
   3: 86400,
-};
+} as const;
 
 export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   // Get body
@@ -46,11 +46,10 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
   if (!value) {
     return new Response(
       JSON.stringify({
-        message: "Key not found",
+        message: "Key expired/does not exist",
       }),
       {
         headers,
-        status: 400,
       }
     );
   }
