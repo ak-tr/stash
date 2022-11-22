@@ -1,15 +1,20 @@
 <template>
-  <select name="ttl" class="ttl">
-    <option value="1">One-time paste</option>
-    <option value="2">Expire in 2 hours</option>
-    <option value="3">Expire in 12 hours</option>
-    <option value="4">Expire in 24 hours</option>
+  <select name="ttl" class="ttl" ref="ttl">
+    <option value="0">One-time paste</option>
+    <option value="1">Expire in 2 hours</option>
+    <option value="2">Expire in 12 hours</option>
+    <option value="3">Expire in 24 hours</option>
   </select>
 </template>
 
 <script lang="ts">
 export default {
   name: "ContainerDropdown",
+  methods: {
+    getSelectedTTL() {
+      return (this.$refs.ttl as HTMLSelectElement).value;
+    }
+  }
 };
 </script>
 
