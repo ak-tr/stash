@@ -5,22 +5,42 @@
 
 <script lang="ts">
 import { EditorState } from "@codemirror/state"
-import { EditorView, keymap } from "@codemirror/view"
+import { EditorView, keymap, lineNumbers } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 
 export default {
   name: "CodeEditor",
+  props: [
+    "isRequestingPaste",
+  ],
   data() {
     return {
-      view: new EditorView()
+      view: new EditorView(),
+      raw: "",
     }
   },
-  mounted() {
+  async mounted() {
     // Get reference to editor and its height
     const editor = this.$refs.editor as HTMLElement;
     const editorHeight = editor.clientHeight;
+
+    editor.style.opacity = "0";
+
+    if (this.isRequestingPaste) {
+      this.raw = await this.getPaste();
+
+      if (!this.raw) {
+        this.$emit("notFound")
+        return;
+      } 
+    }
+
+    editor.style.opacity = "1";
+
     // Specify placeholder text
-    const defaultText = "Paste your code (or anything) here..."
+    const defaultText = this.isRequestingPaste
+      ? this.raw
+      : "Paste your code (or anything) here..."
 
     // Make theme changes to editor
     const theme = EditorView.theme({
@@ -37,13 +57,23 @@ export default {
       ".cm-content": {
         caretColor: "white",
       },
+      ".cm-gutters": {
+        backgroundColor: "inherit !important",
+      }
     }, { dark: true })
+
+    const extensions = [theme, keymap.of(defaultKeymap)];
+
+    if (this.isRequestingPaste)
+      extensions.push(lineNumbers());
 
     // Set start state
     const startState = EditorState.create({
       doc: defaultText,
-      extensions: [theme, keymap.of(defaultKeymap)]
+      extensions,
+      selection: { anchor: defaultText.length },
     });
+
 
     // Create view and pass parent
     this.view = new EditorView({
@@ -51,14 +81,8 @@ export default {
       parent: editor,
     });
 
-    // Set cursor to position of end of placeholder text
-    this.view.dispatch({
-      selection: { anchor: defaultText.length }
-    })
-
-    const options = {
-      attributes: true
-    }
+    // Exit here if requesting paste
+    if (this.isRequestingPaste) return;
 
     // Listen for changes to cm-editor
     const callback = (mutations: MutationRecord[]) => {
@@ -74,11 +98,19 @@ export default {
     }
 
     const observer = new MutationObserver(callback);
-    observer.observe(this.view.dom, options);
+    observer.observe(this.view.dom, { attributes: true });
   },
   methods: {
     getRawText() {
       return this.view.state.doc.toJSON();
+    },
+    async getPaste() {
+      const stashId = window.location.pathname.substring(1);
+      const response = await this.$axios.get(`https://stash.akif.kr/paste/${stashId}`);
+
+      return response.data.raw
+        ? JSON.parse(response.data.raw).join("\n")
+        : null
     }
   }
 }
@@ -92,6 +124,7 @@ export default {
   width: 100%;
   flex-grow: 1;
   padding: 10px;
+  margin-top: 10px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   box-sizing: border-box;
