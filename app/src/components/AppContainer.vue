@@ -1,27 +1,40 @@
 <template>
   <div class="main">
-    <div class="main-header" :class="[!isRequestingPaste ? 'space-between' : 'start']">
+    <div
+      class="buttons"
+      :class="[!isRequestingPaste ? 'space-between' : 'start']"
+    >
       <template v-if="!isRequestingPaste">
         <ContainerDropdown ref="dropdown" />
         <ContainerButton
           :text="getUploadButtonText()"
+          afterText="Uploading..."
           @btn-click="uploadPaste()"
         />
       </template>
       <template v-else-if="pasteExists">
-        <ContainerButton text="Copy Stash" afterText="Copied" />
-        <ContainerButton text="Delete Stash" />
+        <ContainerButton
+          text="Copy Stash"
+          afterText="Copied"
+          @btn-click="callCopyToClipboard()"
+        />
+        <ContainerButton
+          text="Delete Stash"
+          afterText="Are you sure?"
+          doubleText="Deleting..."
+          @btn-click="deleteStash()"
+        />
       </template>
     </div>
     <ContainerMessage
-      v-if="!isRequestingPaste && !isGettingPaste && !pasteExists"
+      v-if="isRequestingPaste && !isGettingPaste && !pasteExists"
       header="Stash not found!"
       message="Either the paste has expired or does not exist! Stashes are automatically deleted after their specified expiry date."
     />
     <CodeEditor
       ref="editor"
       :isRequestingPaste="isRequestingPaste"
-      @paste-found="onPasteFound"
+      @on-paste-result="onPasteResult"
     />
   </div>
 </template>
@@ -80,8 +93,9 @@ export default {
 
       window.location.href = `https://stash.akif.kr/${id}`;
     },
-    onPasteFound() {
-      this.pasteExists = true;
+    onPasteResult(status: boolean) {
+      this.isGettingPaste = false;
+      this.pasteExists = status;
     },
     getOS() {
       if (navigator.userAgent.includes("Win")) return "Win";
@@ -108,6 +122,14 @@ export default {
     getUploadButtonText() {
       return `Upload / ${this.getKeyMap()}`;
     },
+    callCopyToClipboard() {
+      (this.$refs.editor as any).copyToClipboard();
+    },
+    async deleteStash() {
+      const id = window.location.pathname.substring(1);
+      await this.$axios.delete(`https://stash.akif.kr/paste/${id}`);
+      setTimeout(() => window.location.href = "https://stash.akif.kr", 1000);
+    },
   },
 };
 </script>
@@ -131,11 +153,15 @@ export default {
   }
 }
 
-.main-header {
+.buttons {
   display: flex;
   width: 100%;
   padding: 10px 0 10px 0;
   gap: 10px;
+}
+
+.buttons * {
+  font-family: "Montserrat", sans-serif !important;
 }
 
 .space-between {
@@ -144,9 +170,5 @@ export default {
 
 .start {
   justify-content: flex-start;
-}
-
-.main-header * {
-  font-family: "Montserrat", sans-serif !important;
 }
 </style>
