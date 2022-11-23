@@ -12,6 +12,7 @@ const router = Router();
 router
   .all("*", preflight)
   .get("/paste/:id", withParams, controller.getPaste)
+  .delete("/paste/:id", withParams, controller.deletePaste)
   .post("/paste", withContent, controller.createNewPaste)
   .all("*", controller.missingHandler);
 

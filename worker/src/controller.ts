@@ -63,6 +63,19 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
   return new Response(JSON.stringify({ raw: object.raw }, null, 4), { headers });
 }
 
+export const deletePaste = async ({ id }: PasteParams, env: Env) => {
+  let status: boolean;
+
+  try {
+    await env.STASH_KV.delete(id);
+    status = true;
+  } catch (e) {
+    status = false;
+  }
+
+  return new Response(JSON.stringify({ id, status }, null, 4), { headers })
+}
+
 export const errorHandler = (error: any) => {
   return new Response(error.message || "Server Error", {
     status: error.status || 500,
