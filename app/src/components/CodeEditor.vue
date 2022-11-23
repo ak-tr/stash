@@ -30,9 +30,10 @@ export default {
       this.raw = await this.getPaste();
 
       if (!this.raw) {
-        this.$emit("notFound")
         return;
       } 
+
+      this.$emit("pasteFound");
     }
 
     editor.style.opacity = "1";
