@@ -30,10 +30,11 @@ export default {
       this.raw = await this.getPaste();
 
       if (!this.raw) {
+        this.$emit("onPasteResult", false)
         return;
       } 
 
-      this.$emit("pasteFound");
+      this.$emit("onPasteResult", true);
     }
 
     editor.style.opacity = "1";
@@ -65,8 +66,10 @@ export default {
 
     const extensions = [theme, keymap.of(defaultKeymap)];
 
-    if (this.isRequestingPaste)
+    if (this.isRequestingPaste) {
       extensions.push(lineNumbers());
+      extensions.push(EditorView.editable.of(false));
+    }
 
     // Set start state
     const startState = EditorState.create({
@@ -112,6 +115,9 @@ export default {
       return response.data.raw
         ? JSON.parse(response.data.raw).join("\n")
         : null
+    },
+    copyToClipboard() {
+      navigator.clipboard.writeText(this.view.state.doc.toJSON().join("\n"));
     }
   }
 }
