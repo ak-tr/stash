@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <AppHeader />
-    <AppContainer />
+    <AppContainer :isRequestingPaste="isRequestingPaste" />
   </div>
 </template>
 
@@ -14,6 +14,12 @@ export default {
   components: {
     AppHeader,
     AppContainer,
+  },
+  computed: {
+    isRequestingPaste() {
+      // Check if path has been given ID
+      return window.location.pathname.length != 1;
+    }
   }
 }
 </script>
