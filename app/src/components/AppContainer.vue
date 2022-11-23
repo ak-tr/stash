@@ -1,19 +1,27 @@
 <template>
   <div class="main">
-    <div class="main-header" v-if="!isRequestingPaste">
-      <ContainerDropdown ref="dropdown" />
-      <ContainerButton text="Upload" @upload-click="uploadPaste()" />
+    <div class="main-header" :class="[!isRequestingPaste ? 'space-between' : 'start']">
+      <template v-if="!isRequestingPaste">
+        <ContainerDropdown ref="dropdown" />
+        <ContainerButton
+          :text="getUploadButtonText()"
+          @btn-click="uploadPaste()"
+        />
+      </template>
+      <template v-else-if="pasteExists">
+        <ContainerButton text="Copy Stash" afterText="Copied" />
+        <ContainerButton text="Delete Stash" />
+      </template>
     </div>
     <ContainerMessage
-      v-if="!pasteExists"
+      v-if="!isRequestingPaste && !isGettingPaste && !pasteExists"
       header="Stash not found!"
       message="Either the paste has expired or does not exist! Stashes are automatically deleted after their specified expiry date."
     />
     <CodeEditor
-      v-if="pasteExists"
       ref="editor"
       :isRequestingPaste="isRequestingPaste"
-      @not-found="onNotFound"
+      @paste-found="onPasteFound"
     />
   </div>
 </template>
@@ -28,7 +36,8 @@ export default {
   name: "AppContainer",
   data() {
     return {
-      pasteExists: true,
+      isGettingPaste: true,
+      pasteExists: false,
       pasteUploaded: false,
     };
   },
@@ -62,15 +71,42 @@ export default {
         once: +ttl === 0 ? true : false,
       };
 
-      const response = await this.$axios
-        .post("https://stash.akif.kr/paste", payload)
+      const response = await this.$axios.post(
+        "https://stash.akif.kr/paste",
+        payload
+      );
 
       const id = response.data.id;
 
-      window.location.href = `https://stash.akif.kr/${id}`
+      window.location.href = `https://stash.akif.kr/${id}`;
     },
-    onNotFound() {
-      this.pasteExists = false;
+    onPasteFound() {
+      this.pasteExists = true;
+    },
+    getOS() {
+      if (navigator.userAgent.includes("Win")) return "Win";
+      if (navigator.userAgent.includes("Mac")) return "Mac";
+      if (navigator.userAgent.includes("Linux")) return "Linux";
+      if (
+        navigator.userAgent.includes("Android") ||
+        navigator.userAgent.includes("like Mac")
+      )
+        return "Mobile";
+    },
+    getKeyMap() {
+      switch (this.getOS()) {
+        case "Win":
+          return "Ctrl + ⏎";
+        case "Mac":
+          return "⌘ + ⏎";
+        case "Linux":
+          return "❖ + ⏎";
+        default:
+          return "";
+      }
+    },
+    getUploadButtonText() {
+      return `Upload / ${this.getKeyMap()}`;
     },
   },
 };
@@ -83,7 +119,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 0 15%;
-  height: 100vh;
+  height: 85vh;
   align-items: center;
   margin: 10px 20px 20px 20px;
   box-sizing: border-box;
@@ -97,10 +133,17 @@ export default {
 
 .main-header {
   display: flex;
-  justify-content: space-between;
   width: 100%;
   padding: 10px 0 10px 0;
   gap: 10px;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.start {
+  justify-content: flex-start;
 }
 
 .main-header * {
