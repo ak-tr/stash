@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { EditorState } from "@codemirror/state"
-import { EditorView, keymap, lineNumbers } from "@codemirror/view"
+import { EditorView, keymap, lineNumbers, placeholder } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 
 export default {
@@ -40,9 +40,7 @@ export default {
     editor.style.opacity = "1";
 
     // Specify placeholder text
-    const defaultText = this.isRequestingPaste
-      ? this.raw
-      : "Paste your code (or anything) here..."
+    const defaultText = "Paste your code (or anything) here..."
 
     // Make theme changes to editor
     const theme = EditorView.theme({
@@ -64,7 +62,7 @@ export default {
       }
     }, { dark: true })
 
-    const extensions = [theme, keymap.of(defaultKeymap)];
+    const extensions = [theme, keymap.of(defaultKeymap), placeholder(defaultText)];
 
     if (this.isRequestingPaste) {
       extensions.push(lineNumbers());
@@ -73,9 +71,8 @@ export default {
 
     // Set start state
     const startState = EditorState.create({
-      doc: defaultText,
+      doc: this.isRequestingPaste ? this.raw : "",
       extensions,
-      selection: { anchor: defaultText.length },
     });
 
 
