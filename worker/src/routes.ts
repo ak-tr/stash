@@ -6,8 +6,7 @@ import * as controller from "./controller";
 const { preflight, corsify } = createCors({ origins: ["*"] });
 
 // Create router
-export const router = Router();
-export default corsify;
+const router = Router();
 
 // Define main routes
 router
@@ -15,3 +14,5 @@ router
   .get("/paste/:id", withParams, controller.getPaste)
   .post("/paste", withContent, controller.createNewPaste)
   .all("*", controller.missingHandler);
+
+export { router, corsify };

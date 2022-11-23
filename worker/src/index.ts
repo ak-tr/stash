@@ -2,9 +2,8 @@ export interface Env {
   STASH_KV: KVNamespace;
 }
 
-import { router } from "./routes";
+import { router, corsify } from "./routes";
 import { errorHandler } from "./controller";
-import corsify from "./routes";
 
 export default {
   async fetch(
