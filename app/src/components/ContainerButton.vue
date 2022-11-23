@@ -10,15 +10,27 @@ export default {
   data() {
     return {
       buttonText: this.text,
+      clickCount: 0,
     }
   },
-  props: ["text", "afterText"],
+  props: ["text", "afterText", "doubleText"],
   mounted() {
     const button = this.$refs.button as HTMLButtonElement;
 
     button.addEventListener("click", () => {
+      this.clickCount += 1;
+
       if (this.afterText) {
         this.buttonText = this.afterText;
+        if (!this.doubleText) {
+          button.disabled = true;
+        };
+      }
+
+      if (this.doubleText && this.clickCount === 1)
+        return;
+      else if (this.doubleText && this.clickCount === 2) {
+        this.buttonText = this.doubleText;
         button.disabled = true;
       }
 
