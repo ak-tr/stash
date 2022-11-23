@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" :class="{ 'fade-out': shouldFadeOut, 'fade-in': !shouldFadeOut }">
     <div
       class="buttons"
       :class="[!isRequestingPaste ? 'space-between' : 'start']"
@@ -9,7 +9,7 @@
         <ContainerButton
           :text="getUploadButtonText()"
           afterText="Uploading..."
-          @btn-click="uploadPaste()"
+          @btn-click="uploadStash()"
         />
       </template>
       <template v-else-if="pasteExists">
@@ -52,6 +52,7 @@ export default {
       isGettingPaste: true,
       pasteExists: false,
       pasteUploaded: false,
+      shouldFadeOut: false,
     };
   },
   props: ["isRequestingPaste"],
@@ -66,12 +67,12 @@ export default {
 
     window.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.metaKey && e.key == "Enter") {
-        this.uploadPaste();
+        this.uploadStash();
       }
     });
   },
   methods: {
-    async uploadPaste() {
+    async uploadStash() {
       const editor: any = this.$refs.editor;
       const dropdown: any = this.$refs.dropdown;
 
@@ -91,7 +92,8 @@ export default {
 
       const id = response.data.id;
 
-      window.location.href = `https://stash.akif.kr/${id}`;
+      this.shouldFadeOut = true;
+      setTimeout(() => window.location.href = `https://stash.akif.kr/${id}`, 350);
     },
     onPasteResult(status: boolean) {
       this.isGettingPaste = false;
@@ -128,6 +130,8 @@ export default {
     async deleteStash() {
       const id = window.location.pathname.substring(1);
       await this.$axios.delete(`https://stash.akif.kr/paste/${id}`);
+      
+      setTimeout(() => this.shouldFadeOut = true, 500);
       setTimeout(() => window.location.href = "https://stash.akif.kr", 1000);
     },
   },
@@ -170,5 +174,23 @@ export default {
 
 .start {
   justify-content: flex-start;
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.fade-out {
+  animation: fade-out 0.15s forwards;
+}
+
+.fade-in {
+  animation: fade-in 0.3s forwards;
 }
 </style>
