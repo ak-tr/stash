@@ -24,6 +24,10 @@
           doubleText="Deleting..."
           @btn-click="deleteStash()"
         />
+        <ContainerButton
+          text="Open Raw"
+          @btn-click="openStashAsRaw()"
+        />
       </template>
     </div>
     <ContainerMessage
@@ -94,6 +98,12 @@ export default {
 
       this.shouldFadeOut = true;
       setTimeout(() => window.location.href = `https://stash.akif.kr/${id}`, 350);
+    },
+    openStashAsRaw() {
+      // Get ID from URL bar
+      const id = window.location.pathname.substring(1);
+      // Redirect to raw paste
+      window.open(`https://stash.akif.kr/paste/${id}/raw`);
     },
     onPasteResult(status: boolean) {
       this.isGettingPaste = false;
