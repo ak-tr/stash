@@ -1,5 +1,5 @@
 import { Env } from ".";
-import { PasteBody, PasteParams, ValueInKV } from "./types";
+import { KVParsedValue, KVWithMetadata, PasteBody, PasteParams } from "./types";
 
 const headers = {
   "Content-Type": "application/json;charset=UTF-8",
@@ -35,13 +35,19 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   const expirationTtl = ttlEpoch[ttl as keyof typeof ttlEpoch]; // laq42aco
 
   // Add to KV
-  await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), { expirationTtl });
+  await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), {
+    expirationTtl,
+    // Add grace period metadata for one time stashes
+    metadata: { 
+      gracePeriod: Date.now() + 60000
+    },
+  });
 
   return new Response(JSON.stringify({ id: uid }, null, 4), { headers });
 };
 
 export const getPaste = async ({ id }: PasteParams, env: Env) => {
-  const value = await env.STASH_KV.get(id);
+  const { value, metadata }: KVWithMetadata = await env.STASH_KV.getWithMetadata(id);
 
   if (!value) {
     return new Response(
@@ -54,14 +60,21 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
     );
   }
 
-  const object: ValueInKV = JSON.parse(value);
+  const object: KVParsedValue = JSON.parse(value);
+  const isWithinGracePeriod = metadata ? Date.now() < metadata?.gracePeriod : false;
 
-  if (object.once) {
+  console.log(isWithinGracePeriod);
+
+  // If it is a one-time stash and it is not within grace period
+  // delete the key from the key-value store
+  if (object.once && !isWithinGracePeriod) {
     await env.STASH_KV.delete(id);
   }
 
-  return new Response(JSON.stringify({ raw: object.raw }, null, 4), { headers });
-}
+  return new Response(JSON.stringify({ raw: object.raw }, null, 4), {
+    headers,
+  });
+};
 
 export const deletePaste = async ({ id }: PasteParams, env: Env) => {
   let status: boolean;
@@ -73,8 +86,8 @@ export const deletePaste = async ({ id }: PasteParams, env: Env) => {
     status = false;
   }
 
-  return new Response(JSON.stringify({ id, status }, null, 4), { headers })
-}
+  return new Response(JSON.stringify({ id, status }, null, 4), { headers });
+};
 
 export const errorHandler = (error: any) => {
   return new Response(error.message || "Server Error", {

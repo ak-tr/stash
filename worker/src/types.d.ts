@@ -10,7 +10,14 @@ export interface PasteParams {
   id: string,
 };
 
-export interface ValueInKV {
+export interface KVWithMetadata {
+  value: string | null,
+  metadata: {
+    gracePeriod: number,
+  } | null
+};
+
+export interface KVParsedValue {
   raw: string,
   once: boolean,
-};
+}
