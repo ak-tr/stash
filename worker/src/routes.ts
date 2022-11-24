@@ -14,6 +14,7 @@ const router = Router();
 // Define main routes
 router
   .all("*", preflight)
+  .get("/paste/:id/raw", withParams, controller.getPasteAsRaw)
   .get("/paste/:id", withParams, controller.getPaste)
   .delete("/paste/:id", withParams, controller.deletePaste)
   .post("/paste", withContent, controller.createNewPaste)

@@ -63,8 +63,6 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
   const object: KVParsedValue = JSON.parse(value);
   const isWithinGracePeriod = metadata ? Date.now() < metadata?.gracePeriod : false;
 
-  console.log(isWithinGracePeriod);
-
   // If it is a one-time stash and it is not within grace period
   // delete the key from the key-value store
   if (object.once && !isWithinGracePeriod) {
@@ -75,6 +73,28 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
     headers,
   });
 };
+
+export const getPasteAsRaw = async ({ id }: PasteParams, env: Env) => {
+  const value = await env.STASH_KV.get(id);
+
+  if (!value) {
+    return new Response(
+      JSON.stringify({
+        message: "Key expired/does not exist",
+      }),
+      {
+        headers,
+      }
+    );
+  }
+
+  // Parse values as they are stored as string
+  const object: KVParsedValue = JSON.parse(value);
+  const rawToString = JSON.parse(object.raw).join("\n");
+
+  // Show to user as text/plain
+  return new Response(rawToString, { headers: { "Content-Type": "text/plain" }})
+}
 
 export const deletePaste = async ({ id }: PasteParams, env: Env) => {
   let status: boolean;
