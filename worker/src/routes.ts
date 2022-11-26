@@ -14,10 +14,10 @@ const router = Router();
 // Define main routes
 router
   .all("*", preflight)
-  .get("/paste/:id/raw", withParams, controller.getPasteAsRaw)
-  .get("/paste/:id", withParams, controller.getPaste)
-  .delete("/paste/:id", withParams, controller.deletePaste)
-  .post("/paste", withContent, controller.createNewPaste)
+  .get("/stash/:id/raw", withParams, controller.getPasteAsRaw)
+  .get("/stash/:id", withParams, controller.getPaste)
+  .delete("/stash/:id", withParams, controller.deletePaste)
+  .post("/stash", withContent, controller.createNewPaste)
   .all("*", controller.missingHandler);
 
 export { router, corsify };

@@ -86,11 +86,10 @@ export default {
       const payload = {
         ttl: +ttl,
         raw: raw,
-        once: +ttl === 0 ? true : false,
       };
 
       const response = await this.$axios.post(
-        "https://stash.akif.kr/paste",
+        "https://stash.akif.kr/stash",
         payload
       );
 
@@ -103,7 +102,7 @@ export default {
       // Get ID from URL bar
       const id = window.location.pathname.substring(1);
       // Redirect to raw paste
-      window.open(`https://stash.akif.kr/paste/${id}/raw`);
+      window.open(`https://stash.akif.kr/stash/${id}/raw`);
     },
     onPasteResult(status: boolean) {
       this.isGettingPaste = false;
@@ -139,7 +138,7 @@ export default {
     },
     async deleteStash() {
       const id = window.location.pathname.substring(1);
-      await this.$axios.delete(`https://stash.akif.kr/paste/${id}`);
+      await this.$axios.delete(`https://stash.akif.kr/stash/${id}`);
       
       setTimeout(() => this.shouldFadeOut = true, 500);
       setTimeout(() => window.location.href = "https://stash.akif.kr", 1000);

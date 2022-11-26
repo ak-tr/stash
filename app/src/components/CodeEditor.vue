@@ -107,11 +107,9 @@ export default {
     },
     async getPaste() {
       const stashId = window.location.pathname.substring(1);
-      const response = await this.$axios.get(`https://stash.akif.kr/paste/${stashId}`);
+      const response = await this.$axios.get(`https://stash.akif.kr/stash/${stashId}`);
 
-      return response.data.raw
-        ? JSON.parse(response.data.raw).join("\n")
-        : null
+      return response.data.text ?? null;
     },
     copyToClipboard() {
       navigator.clipboard.writeText(this.view.state.doc.toJSON().join("\n"));
