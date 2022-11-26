@@ -19,6 +19,11 @@
           @btn-click="callCopyToClipboard()"
         />
         <ContainerButton
+          text="Copy Link"
+          afterText="Copied"
+          @btn-click="copyLink()"
+        />
+        <ContainerButton
           text="Delete Stash"
           afterText="Are you sure?"
           doubleText="Deleting..."
@@ -135,6 +140,10 @@ export default {
     },
     callCopyToClipboard() {
       (this.$refs.editor as any).copyToClipboard();
+    },
+    copyLink() {
+      const link = window.location.href;
+      navigator.clipboard.writeText(link);
     },
     async deleteStash() {
       const id = window.location.pathname.substring(1);

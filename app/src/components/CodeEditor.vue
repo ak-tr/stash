@@ -112,7 +112,8 @@ export default {
       return response.data.text ?? null;
     },
     copyToClipboard() {
-      navigator.clipboard.writeText(this.view.state.doc.toJSON().join("\n"));
+      const content = this.view.state.doc.toJSON().join("\n");
+      navigator.clipboard.writeText(content);
     }
   }
 }
