@@ -17,7 +17,7 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   const { ttl, raw } = content;
 
   // If missing keys, return bad request
-  if (!(ttl || raw)) {
+  if ([ttl, raw].some((value) => value == null)) {
     return new Response(
       JSON.stringify({
         message: "Bad request",
