@@ -14,10 +14,10 @@ const ttlEpoch = {
 
 export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   // Get body
-  const { ttl, raw, once } = content;
+  const { ttl, raw } = content;
 
   // If missing keys, return bad request
-  if (!(ttl || raw || once)) {
+  if (!(ttl || raw)) {
     return new Response(
       JSON.stringify({
         message: "Bad request",
@@ -32,14 +32,16 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   // Generate new ID
   const uid = Date.now().toString(36);
   // Calculate expiration
-  const expirationTtl = ttlEpoch[ttl as keyof typeof ttlEpoch]; // laq42aco
+  const expirationTtl = ttlEpoch[ttl as keyof typeof ttlEpoch];
+  // Calculate if paste should be read once
+  const once = ttl == 0 ? true : false;
 
   // Add to KV
   await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), {
     expirationTtl,
     // Add grace period metadata for one time stashes
-    metadata: { 
-      gracePeriod: Date.now() + 60000
+    metadata: {
+      gracePeriod: Date.now() + 15000,
     },
   });
 
@@ -47,7 +49,8 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
 };
 
 export const getPaste = async ({ id }: PasteParams, env: Env) => {
-  const { value, metadata }: KVWithMetadata = await env.STASH_KV.getWithMetadata(id);
+  const { value, metadata }: KVWithMetadata =
+    await env.STASH_KV.getWithMetadata(id);
 
   if (!value) {
     return new Response(
@@ -61,7 +64,9 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
   }
 
   const object: KVParsedValue = JSON.parse(value);
-  const isWithinGracePeriod = metadata ? Date.now() < metadata?.gracePeriod : false;
+  const isWithinGracePeriod = metadata
+    ? Date.now() < metadata?.gracePeriod
+    : false;
 
   // If it is a one-time stash and it is not within grace period
   // delete the key from the key-value store
@@ -69,9 +74,20 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
     await env.STASH_KV.delete(id);
   }
 
-  return new Response(JSON.stringify({ raw: object.raw }, null, 4), {
-    headers,
-  });
+  return new Response(
+    JSON.stringify(
+      {
+        raw: object.raw,
+        lines: JSON.parse(object.raw),
+        text: JSON.parse(object.raw).join("\n")
+      },
+      null,
+      4
+    ),
+    {
+      headers,
+    }
+  );
 };
 
 export const getPasteAsRaw = async ({ id }: PasteParams, env: Env) => {
@@ -93,8 +109,10 @@ export const getPasteAsRaw = async ({ id }: PasteParams, env: Env) => {
   const rawToString = JSON.parse(object.raw).join("\n");
 
   // Show to user as text/plain
-  return new Response(rawToString, { headers: { "Content-Type": "text/plain" }})
-}
+  return new Response(rawToString, {
+    headers: { "Content-Type": "text/plain" },
+  });
+};
 
 export const deletePaste = async ({ id }: PasteParams, env: Env) => {
   let status: boolean;
