@@ -1,0 +1,624 @@
+{
+	"info": {
+		"_postman_id": "bcbca26e-e43b-4f11-94d6-29fa4556bbfc",
+		"name": "Stash",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23650846"
+	},
+	"item": [
+		{
+			"name": "Create stash",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ttl\": 1,\n    \"raw\": \"This is a new stash\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/stash",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"stash"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successfully created",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ttl\": 1,\n    \"raw\": \"This is a new stash\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/stash",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 26 Nov 2022 15:16:48 GMT"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "content-length",
+							"value": "24"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "null"
+						},
+						{
+							"key": "access-control-allow-methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "report-to",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=OLHU7Jsq4mGXtqNek78fFYxBwY%2FkpJv4EDJxzIE2GabNilWJ8VskTJA1m92ChFkOvmPomB0y4TNkoWTvAWvnTkhAFUJIVTp0ZSoSgc9gzCEFzyHeiClENBoTOoQVTjLOa94nE3QrEyY%2B\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "nel",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "cf-ray",
+							"value": "7703965a88e506d5-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						},
+						{
+							"key": "server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"lay2si45\"\n}"
+				},
+				{
+					"name": "Missing properties",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ttl\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/stash",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:31:52 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=l9HhqJM5fVzMDFSULJl8%2Bc1IrzZctb0j2WxzT3nuM52WoxD9MkDjlHPhmf8MAS%2FSdJDtudrnKm7D%2BueWxoosESWlK8uWe2aKmfRvizoVS9Zp6MlpuRut9Ho5EmckoWpG\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703ac6b2d8a71aa-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Bad request\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete stash",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/stash/lay21rek",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"stash",
+						"lay21rek"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successfully deleted",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stash/lay21rek",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash",
+								"lay21rek"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:32:17 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "44"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=qNH4T%2FP1Frjez2Bav8Q8rY2NMIDyUQ0us%2BRLvruE5b%2FIOE5ABQh6rGSrEmeawrOUjeKrBcsleb49v6yy0LuRwJRhJh99Zn4lOLH0u7dnttIIXQawMa3mT2Nl7ahztXYQ\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703ad0a2e5e71aa-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"lay21rek\",\n    \"status\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "Get stash",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/stash/lay21rek",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"stash",
+						"lay21rek"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Sucessfully retrieved stash",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stash/lay3sq1e",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash",
+								"lay3sq1e"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:45:09 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=6v%2BgiaxIUebftwLQhUu0H5Wa2vqrT%2FjVmLZZsymS6qktpQXh7kt08kRVR8tvIjZG8NMx4u%2FImzMoyr9GUFh6fdHIS10TVu2lh72nc5IvPq9hpv2bHxgWxjeBVNdG428Q\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703bfe109b488c1-LHR"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "br"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"raw\": \"[\\\"hey\\\"]\",\n    \"lines\": [\n        \"hey\"\n    ],\n    \"text\": \"hey\"\n}"
+				},
+				{
+					"name": "Stash doesn't exist / expired",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stash/lay3sq1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash",
+								"lay3sq1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:45:33 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=ckmqAxSFmh7PHcKwkatFV3U1FmlhiZwzorhjxPG4OOjw5IG0Ycqrii4o8uK66s6tbA85lDlQQLT5U8lNrrVvtw2FNUdTvymPhFdwd0XLp7Qe6bn5QpBfoWAnOUmke57L\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703c079db0a88c1-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Key expired/does not exist\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get stash in raw format",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/stash/lay21rek/raw",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"stash",
+						"lay21rek",
+						"raw"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Sucessfully retrieved stash in raw format",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stash/lay3sq1e/raw",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash",
+								"lay3sq1e",
+								"raw"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:46:18 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "text/plain"
+						},
+						{
+							"key": "Content-Length",
+							"value": "3"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=RPmdQu05PUl6Cnn%2F1SIr%2BeazVyqdN5cEiQVFW67K6paF9cXY5i3PgHlUb65i6JeqvZG9h1M39iyg%2BPgYH2Qe6olN3h7PvqkTH%2BjQ7EBYJ3vO7iHq8If%2B4vYsfYTEFbq8\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703c192882688c1-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "hey"
+				},
+				{
+					"name": "Stash doesn't exist / expired Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stash/lay3sq1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"stash",
+								"lay3sq1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sat, 26 Nov 2022 15:45:33 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "40"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=ckmqAxSFmh7PHcKwkatFV3U1FmlhiZwzorhjxPG4OOjw5IG0Ycqrii4o8uK66s6tbA85lDlQQLT5U8lNrrVvtw2FNUdTvymPhFdwd0XLp7Qe6bn5QpBfoWAnOUmke57L\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "7703c079db0a88c1-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Key expired/does not exist\"\n}"
+				}
+			]
+		}
+	]
+}
