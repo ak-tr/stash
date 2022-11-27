@@ -14,7 +14,7 @@ export default {
   },
   props: ["options", "selected"],
   methods: {
-    getSelectedTTL() {
+    getSelectedValue() {
       return (this.$refs.dropdown as HTMLSelectElement).value;
     },
   },
