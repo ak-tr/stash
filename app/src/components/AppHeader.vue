@@ -28,6 +28,7 @@ export default {
 
 <style scoped>
 a {
+  display: inline-block;
   text-decoration: none;
   color: inherit;
 }
@@ -50,13 +51,15 @@ a {
 .logos {
   display: flex;
   justify-content: space-between;
-  width: 32px;
+  width: 28px;
 }
 
 .logos svg {
   filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(327deg)
     brightness(103%) contrast(102%);
-  transition: all 0.25s;
+  display: inline-block;
+  vertical-align: bottom;
+  transition: transform 0.25s;
 }
 
 .logos svg:hover {

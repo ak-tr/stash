@@ -32,7 +32,6 @@ export default {
 
     if (this.isRequestingPaste) {
       const response = await this.getPaste();
-      console.log(response);
 
       if (!response) {
         this.$emit("onPasteResult", false)
@@ -41,7 +40,6 @@ export default {
 
       this.raw = response.text;
       this.syntax = response.syntax;
-      console.log(`Using syntax ${this.syntax}`);
 
       this.$emit("onPasteResult", true);
     }
@@ -85,7 +83,6 @@ export default {
 
       Object.entries(modes).forEach(([key, value]) => {
         if (key == this.syntax) {
-          console.log(`Adding syntax highlighting for ${key}`);
           extensions.push(StreamLanguage.define(value));
         }
       })
