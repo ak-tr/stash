@@ -18,10 +18,10 @@ The backend API for this project currently consists of 4 RESTful endpoints. The 
 
 `POST /stash` - provide values `ttl` and `raw` as JSON to create a stash.
 
-`GET /stash/:id` - provide ID of stash to get stash; return type is `application/json`.
+`GET /stash/:id` - provide ID of stash to get stash: return type is `application/json`.
 
 `GET /stash/:id/raw` - provide ID of stash to get stash in raw format: return type is `plain/text`
 
 `DELETE /stash/:id` - provide ID of stash to delete stash.
 
-Alternatively, you can view/download the Postman collection [here](https://raw.githubusercontent.com/ak-tr/stash/main/stash_postman.json).
+Alternatively, you can view/download the Postman collection [here](https://raw.githubusercontent.com/ak-tr/stash/main/stash_postman.json) for a more detailed overview of the API.
