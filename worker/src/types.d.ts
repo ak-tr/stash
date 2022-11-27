@@ -2,7 +2,7 @@ export interface PasteBody {
   content: {
     ttl: number,
     raw: string,
-    once: boolean,
+    syntax: string,
   }
 };
 
@@ -20,4 +20,5 @@ export interface KVWithMetadata {
 export interface KVParsedValue {
   raw: string,
   once: boolean,
+  syntax: string,
 }

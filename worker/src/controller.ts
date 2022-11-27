@@ -14,10 +14,10 @@ const ttlEpoch = {
 
 export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   // Get body
-  const { ttl, raw } = content;
+  const { ttl, raw, syntax } = content;
 
   // If missing keys, return bad request
-  if ([ttl, raw].some((value) => value == null)) {
+  if ([ttl, raw, syntax].some((value) => value == null)) {
     return new Response(
       JSON.stringify({
         message: "Bad request",
@@ -37,7 +37,7 @@ export const createNewPaste = async ({ content }: PasteBody, env: Env) => {
   const once = ttl == 0 ? true : false;
 
   // Add to KV
-  await env.STASH_KV.put(uid, JSON.stringify({ raw, once }), {
+  await env.STASH_KV.put(uid, JSON.stringify({ raw, once, syntax }), {
     expirationTtl,
     // Add grace period metadata for one time stashes
     metadata: {
@@ -79,7 +79,8 @@ export const getPaste = async ({ id }: PasteParams, env: Env) => {
       {
         raw: object.raw,
         lines: JSON.parse(object.raw),
-        text: JSON.parse(object.raw).join("\n")
+        text: JSON.parse(object.raw).join("\n"),
+        syntax: object.syntax,
       },
       null,
       4
