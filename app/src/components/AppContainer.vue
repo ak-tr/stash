@@ -64,8 +64,10 @@ import CodeEditor from "./CodeEditor.vue";
 import ContainerButton from "./ContainerButton.vue";
 import ContainerDropdown from "./ContainerDropdown.vue";
 import ContainerMessage from "./ContainerMessage.vue";
-
 import { modes } from "../helpers/highlighters";
+import { createNewStash, deleteStash } from '../services/stash';
+
+// Create a list of values for the syntax higlighter selections
 const highlighterValues = Object.keys(modes).map((mode) => {
   return {
     value: mode,
@@ -134,12 +136,7 @@ export default {
         syntax,
       };
 
-      const response = await this.$axios.post(
-        "https://stash.akif.kr/stash",
-        payload
-      );
-
-      const id = response.data.id;
+      const id = await createNewStash(payload);
 
       this.shouldFadeOut = true;
       setTimeout(() => window.location.href = `https://stash.akif.kr/${id}`, 350);
@@ -187,8 +184,8 @@ export default {
       navigator.clipboard.writeText(link);
     },
     async deleteStash() {
-      const id = window.location.pathname.substring(1);
-      await this.$axios.delete(`https://stash.akif.kr/stash/${id}`);
+      const stashId = window.location.pathname.substring(1);
+      await deleteStash(stashId);
       
       setTimeout(() => this.shouldFadeOut = true, 500);
       setTimeout(() => window.location.href = "https://stash.akif.kr", 1000);

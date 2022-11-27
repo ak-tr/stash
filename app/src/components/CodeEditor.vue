@@ -7,9 +7,9 @@
 import { EditorState } from "@codemirror/state"
 import { EditorView, keymap, lineNumbers, placeholder } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
-
 import { StreamLanguage, syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language"
 import { modes } from "../helpers/highlighters";
+import { getStash } from "../services/stash";
 
 export default {
   name: "CodeEditor",
@@ -31,7 +31,8 @@ export default {
     editor.style.opacity = "0";
 
     if (this.isRequestingPaste) {
-      const response = await this.getPaste();
+      const stashId = window.location.pathname.substring(1);
+      const response = await getStash(stashId);
 
       if (!response) {
         this.$emit("onPasteResult", false)
@@ -124,12 +125,6 @@ export default {
   methods: {
     getRawText() {
       return this.view.state.doc.toJSON();
-    },
-    async getPaste() {
-      const stashId = window.location.pathname.substring(1);
-      const response = await this.$axios.get(`https://stash.akif.kr/stash/${stashId}`);
-
-      return response.data ?? null;
     },
     copyToClipboard() {
       const content = this.view.state.doc.toJSON().join("\n");
