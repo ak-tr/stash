@@ -224,6 +224,7 @@ export default {
 .buttons {
   display: flex;
   width: 100%;
+  flex-wrap: wrap;
   padding: 10px 0 10px 0;
   gap: 10px;
 }

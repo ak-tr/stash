@@ -49,6 +49,13 @@ export default {
   transition: border 0.15s;
 }
 
+@media only screen and (max-width: 600px) {
+  .dropdown {
+    width: 145px;
+    text-overflow: ellipsis;
+  }
+}
+
 select:hover {
   border: 1px solid white;
 }

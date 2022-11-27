@@ -76,4 +76,10 @@ a {
   opacity: 1;
   cursor: pointer;
 }
+
+@media only screen and (max-width: 370px) {
+  .opaque {
+    display: none;
+  }
+}
 </style>
