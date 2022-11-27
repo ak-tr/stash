@@ -5,7 +5,17 @@
       :class="[!isRequestingPaste ? 'space-between' : 'start']"
     >
       <template v-if="!isRequestingPaste">
-        <ContainerDropdown ref="dropdown" />
+        <div class="dropdowns">
+          <ContainerDropdown
+            :options="ttlValues" 
+            selected="1"
+            ref="dropdown" 
+          />
+          <ContainerDropdown 
+            :options="highlighterValues"
+            selected="typescript"
+          />
+        </div>
         <ContainerButton
           :text="getUploadButtonText()"
           afterText="Uploading..."
@@ -54,6 +64,14 @@ import ContainerButton from "./ContainerButton.vue";
 import ContainerDropdown from "./ContainerDropdown.vue";
 import ContainerMessage from "./ContainerMessage.vue";
 
+import { modes } from "../helpers/highlighters";
+const highlighterValues = Object.keys(modes).map((mode) => {
+  return {
+    value: mode,
+    name: mode[0].toUpperCase() + mode.substring(1)
+  }
+})
+
 export default {
   name: "AppContainer",
   data() {
@@ -62,6 +80,25 @@ export default {
       pasteExists: false,
       pasteUploaded: false,
       shouldFadeOut: false,
+      ttlValues: [
+        {
+          value: 0,
+          name: "One-time paste"
+        },
+        {
+          value: 1,
+          name: "Expire in 2 hours",
+        },
+        {
+          value: 2,
+          name: "Expire in 12 hours"
+        },
+        {
+          value: 3,
+          name: "Expire in 24 hours"
+        },
+      ],
+      highlighterValues,
     };
   },
   props: ["isRequestingPaste"],
@@ -173,6 +210,11 @@ export default {
   .main {
     padding: 0;
   }
+}
+
+.dropdowns {
+  display: flex;
+  gap: 10px;
 }
 
 .buttons {
