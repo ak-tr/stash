@@ -9,11 +9,12 @@
           <ContainerDropdown
             :options="ttlValues" 
             selected="1"
-            ref="dropdown" 
+            ref="time"
           />
           <ContainerDropdown 
             :options="highlighterValues"
             selected="typescript"
+            ref="highlighter"
           />
         </div>
         <ContainerButton
@@ -120,14 +121,17 @@ export default {
   methods: {
     async uploadStash() {
       const editor: any = this.$refs.editor;
-      const dropdown: any = this.$refs.dropdown;
+      const highlighterDropdown: any = this.$refs.highlighter;
+      const ttlDropdown: any = this.$refs.time;
 
       const raw = JSON.stringify(editor.getRawText());
-      const ttl = dropdown.getSelectedTTL();
+      const ttl = ttlDropdown.getSelectedValue();
+      const syntax = highlighterDropdown.getSelectedValue();
 
       const payload = {
         ttl: +ttl,
-        raw: raw,
+        raw,
+        syntax,
       };
 
       const response = await this.$axios.post(
