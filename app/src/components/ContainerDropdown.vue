@@ -1,25 +1,28 @@
 <template>
-  <select name="ttl" class="ttl" ref="ttl">
-    <option value="0">One-time paste</option>
-    <option value="1">Expire in 2 hours</option>
-    <option value="2">Expire in 12 hours</option>
-    <option value="3">Expire in 24 hours</option>
+  <select title="dropdown" name="dropdown" class="dropdown" ref="dropdown" v-model="localSelected">
+    <option :selected="option.selected" v-for="option in options" :key="option.value" :value="option.value">{{option.name}}</option>
   </select>
 </template>
 
 <script lang="ts">
 export default {
   name: "ContainerDropdown",
+  data() {
+    return {
+      localSelected: this.selected,
+    }
+  },
+  props: ["options", "selected"],
   methods: {
     getSelectedTTL() {
-      return (this.$refs.ttl as HTMLSelectElement).value;
-    }
-  }
+      return (this.$refs.dropdown as HTMLSelectElement).value;
+    },
+  },
 };
 </script>
 
 <style>
-.ttl {
+.dropdown {
   padding: 0 25px 0 10px;
   width: 175px;
   height: 40px;
@@ -38,9 +41,9 @@ export default {
   -moz-appearance: none;
   appearance: none;
 
-	background-image: url("/down-arrow.svg");
-	background-position: 95% center;
-	background-repeat: no-repeat;
+  background-image: url("/down-arrow.svg");
+  background-position: 95% center;
+  background-repeat: no-repeat;
 
   box-sizing: border-box;
   transition: border 0.15s;
