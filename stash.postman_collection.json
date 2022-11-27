@@ -32,13 +32,13 @@
 			},
 			"response": [
 				{
-					"name": "Successfully created",
+					"name": "Successfully created stash",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"ttl\": 1,\n    \"raw\": \"This is a new stash\"\n}",
+							"raw": "{\n    \"ttl\": 0,\n    \"raw\": \"[\\\"hey\\\"]\",\n    \"syntax\": \"javascript\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,60 +60,56 @@
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
-							"key": "date",
-							"value": "Sat, 26 Nov 2022 15:16:48 GMT"
+							"key": "Date",
+							"value": "Sun, 27 Nov 2022 23:00:24 GMT"
 						},
 						{
-							"key": "content-type",
+							"key": "Content-Type",
 							"value": "application/json;charset=UTF-8"
 						},
 						{
-							"key": "content-length",
+							"key": "Content-Length",
 							"value": "24"
-						},
-						{
-							"key": "access-control-allow-origin",
-							"value": "null"
-						},
-						{
-							"key": "access-control-allow-methods",
-							"value": "GET, POST, DELETE"
-						},
-						{
-							"key": "report-to",
-							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=OLHU7Jsq4mGXtqNek78fFYxBwY%2FkpJv4EDJxzIE2GabNilWJ8VskTJA1m92ChFkOvmPomB0y4TNkoWTvAWvnTkhAFUJIVTp0ZSoSgc9gzCEFzyHeiClENBoTOoQVTjLOa94nE3QrEyY%2B\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
-						},
-						{
-							"key": "nel",
-							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
-						},
-						{
-							"key": "vary",
-							"value": "Accept-Encoding"
-						},
-						{
-							"key": "cf-ray",
-							"value": "7703965a88e506d5-LHR"
-						},
-						{
-							"key": "alt-svc",
-							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
-						},
-						{
-							"key": "server",
-							"value": "cloudflare"
 						},
 						{
 							"key": "Connection",
 							"value": "keep-alive"
 						},
 						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
+							"key": "Access-Control-Allow-Origin",
+							"value": "null"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET, POST, DELETE"
+						},
+						{
+							"key": "Report-To",
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=8K%2B%2BRB4FNKCKvaSRItVFZgAMAuUlOkVdwJ%2FwytX3CKycundutFUJ%2BRHIyoXrdjp6DZgisTi4dQ39tRQxMlPXuiEtIjyjOA3athFIMfPvu0S7vOhA4N9tw32PLdFhiAtB\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "NEL",
+							"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "770e7ad1e95a8862-LHR"
+						},
+						{
+							"key": "alt-svc",
+							"value": "h3=\":443\"; ma=86400, h3-29=\":443\"; ma=86400"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"id\": \"lay2si45\"\n}"
+					"body": "{\n    \"id\": \"lazysjf6\"\n}"
 				},
 				{
 					"name": "Missing properties",
@@ -306,18 +302,18 @@
 			},
 			"response": [
 				{
-					"name": "Sucessfully retrieved stash",
+					"name": "Succesfully retrieved stash",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/stash/lay3sq1e",
+							"raw": "{{baseUrl}}/stash/lazysjf6",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"stash",
-								"lay3sq1e"
+								"lazysjf6"
 							]
 						}
 					},
@@ -327,7 +323,7 @@
 					"header": [
 						{
 							"key": "Date",
-							"value": "Sat, 26 Nov 2022 15:45:09 GMT"
+							"value": "Sun, 27 Nov 2022 23:01:26 GMT"
 						},
 						{
 							"key": "Content-Type",
@@ -351,7 +347,7 @@
 						},
 						{
 							"key": "Report-To",
-							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=6v%2BgiaxIUebftwLQhUu0H5Wa2vqrT%2FjVmLZZsymS6qktpQXh7kt08kRVR8tvIjZG8NMx4u%2FImzMoyr9GUFh6fdHIS10TVu2lh72nc5IvPq9hpv2bHxgWxjeBVNdG428Q\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+							"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=nh%2FBpFvQWtvz18cRcdIsUQNwGP67ZrR3XR87L1WMgubFWudofJP9Tf%2BS%2BI4QjMcJmehzi30jgSA89knnQCT7rjRmP1kVz%2BdD9Jqc74d9eAf3opNn8nRgukgS2YoGF%2Fcb\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
 						},
 						{
 							"key": "NEL",
@@ -367,7 +363,7 @@
 						},
 						{
 							"key": "CF-RAY",
-							"value": "7703bfe109b488c1-LHR"
+							"value": "770e7c58ccd18862-LHR"
 						},
 						{
 							"key": "Content-Encoding",
@@ -379,7 +375,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"raw\": \"[\\\"hey\\\"]\",\n    \"lines\": [\n        \"hey\"\n    ],\n    \"text\": \"hey\"\n}"
+					"body": "{\n    \"raw\": \"[\\\"hey\\\"]\",\n    \"lines\": [\n        \"hey\"\n    ],\n    \"text\": \"hey\",\n    \"syntax\": \"javascript\"\n}"
 				},
 				{
 					"name": "Stash doesn't exist / expired",
