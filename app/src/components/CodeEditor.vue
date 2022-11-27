@@ -8,6 +8,9 @@ import { EditorState } from "@codemirror/state"
 import { EditorView, keymap, lineNumbers, placeholder } from "@codemirror/view"
 import { defaultKeymap } from "@codemirror/commands"
 
+import { StreamLanguage, syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language"
+import { modes } from "../helpers/highlighters";
+
 export default {
   name: "CodeEditor",
   props: [
@@ -17,6 +20,7 @@ export default {
     return {
       view: new EditorView(),
       raw: "",
+      syntax: "",
     }
   },
   async mounted() {
@@ -27,12 +31,17 @@ export default {
     editor.style.opacity = "0";
 
     if (this.isRequestingPaste) {
-      this.raw = await this.getPaste();
+      const response = await this.getPaste();
+      console.log(response);
 
-      if (!this.raw) {
+      if (!response) {
         this.$emit("onPasteResult", false)
         return;
       } 
+
+      this.raw = response.text;
+      this.syntax = response.syntax;
+      console.log(`Using syntax ${this.syntax}`);
 
       this.$emit("onPasteResult", true);
     }
@@ -46,7 +55,6 @@ export default {
     const theme = EditorView.theme({
       "&": {
         height: `${editorHeight-15}px`,
-        color: "rgba(255, 255, 255, 0.5)"
       },
       "&.cm-focused": {
         outline: "none !important",
@@ -59,16 +67,31 @@ export default {
       },
       ".cm-gutters": {
         backgroundColor: "inherit !important",
+        color: "rgba(255, 255, 255, 0.5)",
+        paddingRight: "10px"
       }
     }, { dark: true })
 
-    const extensions = [theme, keymap.of(defaultKeymap), placeholder(defaultText)];
+    const extensions = [
+      theme,
+      keymap.of(defaultKeymap),
+      placeholder(defaultText),
+      syntaxHighlighting(defaultHighlightStyle)
+    ]
 
     if (this.isRequestingPaste) {
       extensions.push(lineNumbers());
       extensions.push(EditorView.editable.of(false));
-    }
 
+      Object.entries(modes).forEach(([key, value]) => {
+        if (key == this.syntax) {
+          console.log(`Adding syntax highlighting for ${key}`);
+          extensions.push(StreamLanguage.define(value));
+        }
+      })
+    }
+    
+    
     // Set start state
     const startState = EditorState.create({
       doc: this.isRequestingPaste ? this.raw : "",
@@ -109,7 +132,7 @@ export default {
       const stashId = window.location.pathname.substring(1);
       const response = await this.$axios.get(`https://stash.akif.kr/stash/${stashId}`);
 
-      return response.data.text ?? null;
+      return response.data ?? null;
     },
     copyToClipboard() {
       const content = this.view.state.doc.toJSON().join("\n");
@@ -128,7 +151,7 @@ export default {
   flex-grow: 1;
   padding: 10px;
   margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.01);
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 13px;
