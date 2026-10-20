@@ -1,20 +1,21 @@
 {
   "name": "stash",
   "version": "0.0.0",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20221111.1",
-    "typescript": "^4.9.3",
-    "wrangler": "2.4.2"
-  },
   "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.14.2",
   "scripts": {
-    "start": "wrangler dev",
-    "deploy": "wrangler publish"
+    "build": "pnpm --dir ../app install --frozen-lockfile && pnpm --dir ../app build",
+    "start": "pnpm run build && wrangler dev",
+    "deploy": "pnpm run build && wrangler deploy",
+    "check": "tsc && node src/index.check.mjs"
   },
   "dependencies": {
-    "@types/itty-router-extras": "^0.4.0",
-    "itty-cors": "^0.3.4",
-    "itty-router": "^2.6.6",
-    "itty-router-extras": "^0.4.2"
+    "itty-router": "^5.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261019.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.151.3"
   }
 }
