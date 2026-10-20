@@ -1,27 +1,34 @@
 # Stash
 
-First full-stack project - a pastebin clone using Vue + TS for the frontend and Cloudflare Workers + TS for the backend; helping power this performant and lightweight single-page web app for sharing code snippets.
+A pastebin for sharing code snippets. Vue + TypeScript for the frontend, a Cloudflare Worker + KV for the backend. It uses the [Mosaic](https://github.com/ak-tr/mosaic) design system.
 
-## App (Frontend)
+Go to [stash.akif.kr](https://stash.akif.kr), paste your code, pick an expiry and a syntax, and press Upload (or ⌘ + ⏎ / Ctrl + ⏎). Copy the link to share it. Stashes you make are listed under **Your stashes** in that browser, which also keeps the token that lets you delete them.
 
-All frontend files are stored in the `app` directory.
+## Running and deploying
 
-Go to [stash.akif.kr](https://stash.akif.kr) and paste your code. Specify the length of the snippet. Press the combo keys as shown for your system, or click the upload button. Copy the link at the top to share after uploading.
+One Cloudflare Worker serves everything on `stash.akif.kr`: the API on `/stash`, and the built app from `app/dist` for every other path. Its config is `worker/wrangler.jsonc`.
 
-## Worker (Backend)
+- `pnpm start` in `worker`: builds the app and serves the whole site on `localhost:8787`, with a local KV.
+- `pnpm dev` in `app`: the app with hot reload on `localhost:5173`. It proxies `/stash` to the worker above, so run that too.
+- `pnpm check` in `worker`: type-checks and runs the API checks against an in-memory KV. `pnpm check` in `app` checks language detection.
+- `pnpm run deploy` in `worker`: builds the app and deploys the app and API together. (`pnpm deploy` without `run` is a different, built-in pnpm command.)
 
-All backend files are stored in the `worker` directory.
+## API
 
-The backend API for this project currently consists of 4 RESTful endpoints. The base url for the API is the same as the app: [stash.akif.kr](https://stash.akif.kr).
+The API lives on the same host as the app: [stash.akif.kr](https://stash.akif.kr).
 
-### Endpoints
+`POST /stash` creates a stash. JSON body:
 
-`POST /stash` - provide values `ttl` and `raw` as JSON to create a stash.
+- `text`: the content (required, up to 512 KB)
+- `ttl`: `0` one read only, `1` 2 hours, `2` 12 hours, `3` 24 hours
+- `syntax`: optional, e.g. `typescript`
 
-`GET /stash/:id` - provide ID of stash to get stash: return type is `application/json`.
+Returns `{ id, token, expiresAt }`. Keep `token`: it's the only way to delete the stash.
 
-`GET /stash/:id/raw` - provide ID of stash to get stash in raw format: return type is `plain/text`
+`GET /stash/:id` returns `{ id, text, syntax, once, expiresAt, deleted }` as JSON, or 404. A one-time stash is deleted by the first read from anyone but its creator (send `Authorization: Bearer <token>` to read your own without using it up); `deleted` is `true` on that read.
 
-`DELETE /stash/:id` - provide ID of stash to delete stash.
+`GET /stash/:id/raw` returns the text as `text/plain; charset=utf-8`, with the same one-time rule.
 
-Alternatively, you can view/download the Postman collection [here](https://raw.githubusercontent.com/ak-tr/stash/main/stash_postman.json) for a more detailed overview of the API.
+`DELETE /stash/:id` with `Authorization: Bearer <token>` deletes it. Returns 403 for a missing or wrong token.
+
+The [Postman collection](stash.postman_collection.json) has all four requests. Creating a stash saves its `id` and `token` for the others.

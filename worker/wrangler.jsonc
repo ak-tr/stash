@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // One Worker serves both: the API on /stash, and the built app (app/dist) for everything else.
+  // Must match the existing Worker's name, or the old one keeps its /stash* route.
+  "name": "stash",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "routes": [{ "pattern": "stash.akif.kr/*", "zone_name": "akif.kr" }],
+  "kv_namespaces": [{ "binding": "STASH_KV", "id": "9696315a5b9c4b7d99180ae6db524604" }],
+  "assets": {
+    "directory": "../app/dist",
+    // /abc123 and /mine aren't files, so they get index.html and the app routes them
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/stash", "/stash/*"]
+  }
+}

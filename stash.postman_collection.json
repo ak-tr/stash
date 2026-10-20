@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"ttl\": 1,\n    \"raw\": \"This is a new stash\"\n}",
+					"raw": "{\n    \"ttl\": 1,\n    \"syntax\": \"typescript\",\n    \"text\": \"const hello = \\\"world\\\";\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -191,21 +191,41 @@
 					"cookie": [],
 					"body": "{\n    \"message\": \"Bad request\"\n}"
 				}
+			],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// Saves the new stash's id and delete token for the other requests",
+							"const { id, token } = pm.response.json();",
+							"pm.collectionVariables.set(\"id\", id);",
+							"pm.collectionVariables.set(\"token\", token);"
+						]
+					}
+				}
 			]
 		},
 		{
 			"name": "Delete stash",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "{{baseUrl}}/stash/lay21rek",
+					"raw": "{{baseUrl}}/stash/{{id}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"stash",
-						"lay21rek"
+						"{{id}}"
 					]
 				}
 			},
@@ -290,13 +310,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/stash/lay21rek",
+					"raw": "{{baseUrl}}/stash/{{id}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"stash",
-						"lay21rek"
+						"{{id}}"
 					]
 				}
 			},
@@ -457,13 +477,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/stash/lay21rek/raw",
+					"raw": "{{baseUrl}}/stash/{{id}}/raw",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"stash",
-						"lay21rek",
+						"{{id}}",
 						"raw"
 					]
 				}
@@ -615,6 +635,20 @@
 					"body": "{\n    \"message\": \"Key expired/does not exist\"\n}"
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://stash.akif.kr"
+		},
+		{
+			"key": "id",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
 		}
 	]
 }
