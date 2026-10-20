@@ -1,42 +1,21 @@
 <template>
-  <div class="wrapper">
-    <AppHeader />
-    <AppContainer :isRequestingPaste="isRequestingPaste" />
+  <div class="flex h-dvh flex-col font-mono text-xs uppercase tracking-wide text-neutral-500">
+    <AppHeader :path="path" />
+    <main class="flex min-h-0 flex-1 flex-col overflow-y-auto font-sans text-base normal-case tracking-normal text-neutral-200">
+      <component :is="page" />
+    </main>
+    <AppFooter />
   </div>
 </template>
 
-<script lang="ts">
-import AppHeader from './components/AppHeader.vue';
-import AppContainer from './components/AppContainer.vue';
+<script setup lang="ts">
+import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
+import NewStash from "./pages/NewStash.vue";
+import ViewStash from "./pages/ViewStash.vue";
+import YourStashes from "./pages/YourStashes.vue";
 
-export default {
-  name: "App",
-  components: {
-    AppHeader,
-    AppContainer,
-  },
-  computed: {
-    isRequestingPaste() {
-      // Check if path has been given ID
-      return window.location.pathname.length != 1;
-    }
-  }
-}
+// Three pages, so no router: / is new, /mine is yours, anything else is a stash ID
+const path = location.pathname;
+const page = path === "/" ? NewStash : path === "/mine" ? YourStashes : ViewStash;
 </script>
-
-
-<style scoped>
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-
-* {
-  font-family: "Space Mono", monospace;
-}
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  height: 100vh;
-}
-
-</style>

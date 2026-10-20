@@ -1,10 +1,8 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  optimizeDeps: {
-    exclude: ["worker"]
-  },
-})
+  // The API runs separately: `pnpm start` in ../worker serves it on :8787
+  server: { proxy: { "^/stash(/|$)": "http://localhost:8787" } },
+});

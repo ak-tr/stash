@@ -1,157 +1,77 @@
 <template>
-  <div class="editor" ref="editor">
-  </div>
+  <div ref="el" class="min-h-0 flex-1 bg-tile font-mono text-[13px]"></div>
 </template>
 
-<script lang="ts">
-import { EditorState } from "@codemirror/state"
-import { EditorView, keymap, lineNumbers, placeholder } from "@codemirror/view"
-import { defaultKeymap } from "@codemirror/commands"
-import { StreamLanguage, syntaxHighlighting, defaultHighlightStyle } from "@codemirror/language"
-import { modes } from "../helpers/highlighters";
-import { getStash } from "../services/stash";
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { Compartment, EditorState } from "@codemirror/state";
+import { EditorView, highlightActiveLine, highlightActiveLineGutter, keymap, lineNumbers, placeholder } from "@codemirror/view";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { syntaxHighlighting, HighlightStyle } from "@codemirror/language";
+import { tags as t } from "@lezer/highlight";
+import { languages } from "../helpers/highlighters";
 
-export default {
-  name: "CodeEditor",
-  props: [
-    "isRequestingPaste",
-  ],
-  data() {
-    return {
-      view: new EditorView(),
-      raw: "",
-      syntax: "",
-    }
-  },
-  async mounted() {
-    // Get reference to editor and its height
-    const editor = this.$refs.editor as HTMLElement;
-    const editorHeight = editor.clientHeight;
+const props = defineProps<{ syntax: string; doc?: string; readonly?: boolean }>();
 
-    editor.style.opacity = "0";
+const token = (name: string) => `rgb(var(--${name}))`;
 
-    if (this.isRequestingPaste) {
-      const stashId = window.location.pathname.substring(1);
-      const response = await getStash(stashId);
+// Editor chrome follows the Mosaic theme tokens. The active line only shows while focused.
+const theme = EditorView.theme({
+  "&": { height: "100%", color: token("n-200") },
+  "&.cm-focused": { outline: "none" },
+  ".cm-scroller": { fontFamily: "inherit", padding: "12px 0" },
+  ".cm-content": { caretColor: token("white"), padding: "0 12px 0 4px" },
+  ".cm-cursor": { borderLeftColor: token("white") },
+  ".cm-gutters": { backgroundColor: "transparent", color: token("n-500"), border: "none", paddingLeft: "8px" },
+  ".cm-placeholder": { color: token("n-500") },
+  ".cm-activeLine, .cm-activeLineGutter": { backgroundColor: "transparent" },
+  "&.cm-focused .cm-activeLine, &.cm-focused .cm-activeLineGutter": { backgroundColor: token("tile-2") },
+});
 
-      if (!response) {
-        this.$emit("onPasteResult", false)
-        return;
-      } 
+// Monochrome syntax: weight and grey do the work, no accent colours
+const highlightStyle = HighlightStyle.define([
+  { tag: [t.keyword, t.modifier, t.operatorKeyword, t.controlKeyword, t.definitionKeyword], color: token("white"), fontWeight: "700" },
+  { tag: [t.definition(t.variableName), t.function(t.variableName), t.typeName, t.className, t.propertyName], color: token("white") },
+  { tag: [t.string, t.special(t.string), t.regexp], color: token("n-400") },
+  { tag: [t.number, t.bool, t.null, t.atom], color: token("n-300") },
+  { tag: t.comment, color: token("n-500"), fontStyle: "italic" },
+]);
 
-      this.raw = response.text;
-      this.syntax = response.syntax;
+const el = ref<HTMLElement>();
+const language = new Compartment();
+let view: EditorView;
 
-      this.$emit("onPasteResult", true);
-    }
+onMounted(() => {
+  view = new EditorView({
+    parent: el.value!,
+    state: EditorState.create({
+      doc: props.doc ?? "",
+      extensions: [
+        theme,
+        lineNumbers(),
+        syntaxHighlighting(highlightStyle),
+        language.of(languages[props.syntax] ?? []),
+        props.readonly
+          ? EditorView.editable.of(false)
+          : [
+              history(),
+              keymap.of([...defaultKeymap, ...historyKeymap]),
+              placeholder("Paste your code (or anything) here..."),
+              highlightActiveLine(),
+              highlightActiveLineGutter(),
+            ],
+      ],
+    }),
+  });
+});
 
-    editor.style.opacity = "1";
+// Highlight while typing, not just after upload
+watch(() => props.syntax, (syntax) => view.dispatch({ effects: language.reconfigure(languages[syntax] ?? []) }));
 
-    // Specify placeholder text
-    const defaultText = "Paste your code (or anything) here..."
+onBeforeUnmount(() => view.destroy());
 
-    // Make theme changes to editor
-    const theme = EditorView.theme({
-      "&": {
-        height: `${editorHeight-15}px`,
-      },
-      "&.cm-focused": {
-        outline: "none !important",
-      },
-      ".cm-scroller": {
-        overflow: "auto",
-      },
-      ".cm-content": {
-        caretColor: "white",
-      },
-      ".cm-gutters": {
-        backgroundColor: "inherit !important",
-        color: "rgba(255, 255, 255, 0.5)",
-        paddingRight: "10px"
-      }
-    }, { dark: true })
-
-    const extensions = [
-      theme,
-      keymap.of(defaultKeymap),
-      placeholder(defaultText),
-      syntaxHighlighting(defaultHighlightStyle)
-    ]
-
-    if (this.isRequestingPaste) {
-      extensions.push(lineNumbers());
-      extensions.push(EditorView.editable.of(false));
-
-      Object.entries(modes).forEach(([key, value]) => {
-        if (key == this.syntax) {
-          extensions.push(StreamLanguage.define(value));
-        }
-      })
-    }
-    
-    
-    // Set start state
-    const startState = EditorState.create({
-      doc: this.isRequestingPaste ? this.raw : "",
-      extensions,
-    });
-
-
-    // Create view and pass parent
-    this.view = new EditorView({
-      state: startState,
-      parent: editor,
-    });
-
-    // Exit here if requesting paste
-    if (this.isRequestingPaste) return;
-
-    // Listen for changes to cm-editor
-    const callback = (mutations: MutationRecord[]) => {
-      mutations.forEach((mutation) => {
-        const target = mutation.target as HTMLElement;
-
-        if (target.classList.contains("cm-focused")) {
-          return editor.style.outline = "1px solid white";
-        }
-
-        editor.style.outline = "1px solid rgba(255, 255, 255, 0.1)";
-      })
-    }
-
-    const observer = new MutationObserver(callback);
-    observer.observe(this.view.dom, { attributes: true });
-  },
-  methods: {
-    getRawText() {
-      return this.view.state.doc.toJSON();
-    },
-    copyToClipboard() {
-      const content = this.view.state.doc.toJSON().join("\n");
-      navigator.clipboard.writeText(content);
-    }
-  }
-}
+defineExpose({
+  getText: () => view.state.doc.toString(),
+  focus: () => view.focus(),
+});
 </script>
-
-<style>
-@import url("https://fonts.cdnfonts.com/css/sf-mono");
-
-.editor {
-  font-family: "SF Mono", sans-serif;
-  width: 100%;
-  flex-grow: 1;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.01);
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 13px;
-  outline: 1px solid rgba(255, 255, 255, 0.1);
-  transition: outline 0.15s;
-}
-
-.editor * {
-  font-family: inherit !important;
-}
-</style>
